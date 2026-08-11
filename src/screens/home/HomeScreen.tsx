@@ -48,16 +48,16 @@ const HomeScreen = ({ navigation }: any) => {
 
                 const learningResult = await learningRes.json();
                 const profileResult = await profileRes.json();
-                
+
                 console.log("Active Course API Result:", learningResult);
-                
+
                 if (learningResult.status && learningResult.data && learningResult.data.course_id) {
                     const learning = learningResult.data;
                     const course = learning.course_details || {};
                     const totalLessons = course.curriculum?.reduce((acc: number, section: any) => acc + (section.lessons?.length || 0), 0) || 0;
                     const completedLessons = learning.lesson_count?.length || 0;
                     const perc = totalLessons > 0 ? (completedLessons / totalLessons) : 0;
-                    
+
                     setActiveCourse({
                         id: learning.course_id,
                         title: course.course_title || 'Active Course',
@@ -66,7 +66,7 @@ const HomeScreen = ({ navigation }: any) => {
                         percentage: perc * 100,
                         remaining: totalLessons - completedLessons
                     });
-                    
+
                     progress.value = withDelay(500, withTiming(perc, { duration: 1500 }));
                 }
 
@@ -119,8 +119,8 @@ const HomeScreen = ({ navigation }: any) => {
                         entering={FadeInUp.duration(800).delay(400)}
                         style={styles.section}
                     >
-                        <TouchableOpacity 
-                            activeOpacity={0.9} 
+                        <TouchableOpacity
+                            activeOpacity={0.9}
                             style={styles.cardContainer}
                             onPress={() => navigation.navigate('Learn', {
                                 screen: 'CourseDetail',
@@ -253,8 +253,9 @@ const HomeScreen = ({ navigation }: any) => {
                     <Text style={styles.sectionTitle}>Quick Services</Text>
                     <View style={styles.quickServicesGrid}>
                         {[
-                            { icon: 'menu-book', color: '#2563eb', bg: 'rgba(239, 246, 255, 0.8)', border: 'rgba(219, 234, 254, 0.5)', label: 'LIBRARY' },
+                            { icon: 'collections', color: '#2563eb', bg: 'rgba(239, 246, 255, 0.8)', border: 'rgba(219, 234, 254, 0.5)', label: 'MEDICA 2D' },
                             { icon: 'view-in-ar', color: '#f97316', bg: 'rgba(255, 247, 237, 0.8)', border: 'rgba(255, 237, 213, 0.5)', label: 'MEDICA 3D' },
+                            { icon: 'mic', color: '#0d9488', bg: 'rgba(240, 253, 250, 0.8)', border: 'rgba(204, 251, 241, 0.5)', label: 'Prof. G' },
                             { icon: 'verified-user', color: '#059669', bg: 'rgba(236, 253, 245, 0.8)', border: 'rgba(209, 250, 229, 0.5)', label: 'EXAMS' },
                             { icon: 'chat-bubble', color: '#ec4899', bg: 'rgba(253, 242, 248, 0.8)', border: 'rgba(252, 231, 243, 0.5)', label: 'SUPPORT' },
                         ].map((item, index) => (
@@ -263,13 +264,15 @@ const HomeScreen = ({ navigation }: any) => {
                                 entering={FadeInUp.duration(600).delay(1200 + (index * 100))}
                                 style={styles.quickServiceItem}
                             >
-                                <TouchableOpacity 
+                                <TouchableOpacity
                                     style={[styles.qsIconContainer, { backgroundColor: item.bg, borderColor: item.border }]}
                                     onPress={() => {
-                                        if (item.label === 'LIBRARY') {
-                                            navigation.navigate('Learn');
+                                        if (item.label === 'MEDICA 2D') {
+                                            navigation.navigate('LibraryStack', { screen: 'ImageLibrary' });
                                         } else if (item.label === 'MEDICA 3D') {
                                             navigation.navigate('LibraryStack');
+                                        } else if (item.label === 'Prof. G') {
+                                            navigation.navigate('LibraryStack', { screen: 'VoiceAgentOpenAI' });
                                         } else if (item.label === 'EXAMS') {
                                             navigation.navigate('Assess');
                                         } else if (item.label === 'SUPPORT') {
@@ -648,12 +651,15 @@ const styles = StyleSheet.create({
     quickServicesGrid: {
         flexDirection: 'row',
         justifyContent: 'space-between',
+        flexWrap: 'wrap',
         marginTop: 20,
+        gap: 10,
     },
     quickServiceItem: {
         alignItems: 'center',
-        gap: 12,
+        gap: 8,
         flex: 1,
+        minWidth: 60,
     },
     qsIconContainer: {
         width: 64,

@@ -1,9 +1,11 @@
 export type RootStackParamList = {
+    Intro: undefined;
     Login: undefined;
     Main: undefined;
     ChatList: undefined;
     Chat: { threadId: string; title?: string; isNew: boolean };
     LibraryStack: undefined;
+    ImageLibrary: undefined;
     PersonalInfo: { userData: any };
 };
 
@@ -24,4 +26,7 @@ export type LearnStackParamList = {
 export type LibraryStackParamList = {
     LibraryList: undefined;
     ModelView: { modelData: any };
+    ImageLibrary: undefined;
+    VoiceAgent: undefined;
+    VoiceAgentOpenAI: undefined;
 };

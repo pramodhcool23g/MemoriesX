@@ -1,5 +1,6 @@
 import React from 'react';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import IntroScreen from '../screens/intro/IntroScreen';
 import LoginScreen from '../screens/auth/LoginScreen';
 import BottomTabNavigator from './BottomTabNavigator';
 import ChatListScreen from '../screens/chat/ChatListScreen';
@@ -10,12 +11,20 @@ import { RootStackParamList } from './types';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
-const RootNavigator = ({ isAuthenticated }: { isAuthenticated: boolean }) => {
+const RootNavigator = ({ isAuthenticated, hasSeenIntro }: { isAuthenticated: boolean; hasSeenIntro: boolean }) => {
+    let initialRoute: keyof RootStackParamList = "Login";
+    if (isAuthenticated) {
+        initialRoute = "Main";
+    } else if (!hasSeenIntro) {
+        initialRoute = "Intro";
+    }
+
     return (
         <Stack.Navigator
             screenOptions={{ headerShown: false }}
-            initialRouteName={isAuthenticated ? "Main" : "Login"}
+            initialRouteName={initialRoute}
         >
+            <Stack.Screen name="Intro" component={IntroScreen} />
             <Stack.Screen name="Login" component={LoginScreen} />
             <Stack.Screen name="Main" component={BottomTabNavigator} />
             <Stack.Screen name="ChatList" component={ChatListScreen} />
